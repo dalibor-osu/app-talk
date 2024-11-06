@@ -6,9 +6,8 @@ using static AppTalk.Models.Database.Constants;
 namespace AppTalk.Models.Models;
 
 [Table(RoomTable.TableName)]
-public sealed record Room :  IBasicDatabaseItem, IServerIdentifiable
+public sealed record Room : IBasicDatabaseItem, IServerIdentifiable
 {
-    
     /// <inheritdoc cref="IIdentifiable.Id"/>
     [Column(IIdentifiable.ColumnName)]
     [Key]
@@ -32,5 +31,4 @@ public sealed record Room :  IBasicDatabaseItem, IServerIdentifiable
     /// <inheritdoc cref="IDeletable.Deleted"/>
     [Column(IDeletable.ColumnName)]
     public bool Deleted { get; set; }
-    
 }
