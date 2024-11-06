@@ -8,6 +8,7 @@ namespace AppTalk.Models.Models;
 [Table(RoomTable.TableName)]
 public sealed record Room : IBasicDatabaseItem, IServerIdentifiable
 {
+    
     /// <inheritdoc cref="IIdentifiable.Id"/>
     [Column(IIdentifiable.ColumnName)]
     [Key]
