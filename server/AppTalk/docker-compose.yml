@@ -1,6 +1,34 @@
 ﻿services:
-  apptalk.api:
+  database-postgresql:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres:/var/lib/postgresql/data
+      - ./PostgreSQL/Init.Development.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - services
+
+  app-talk.api:
     image: apptalk.api
     build:
       context: .
       dockerfile: AppTalk.API/Dockerfile
+      args:
+        CONFIGURATION: Development
+    ports:
+      - '5200:5200'
+    depends_on:
+      - database-postgresql
+    networks:
+      - services
+
+networks:
+  services:
+
+volumes:
+  postgres:
