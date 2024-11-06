@@ -12,4 +12,4 @@ var app = builder.Build();
 // }
 
 app.UseHttpsRedirection();
-app.RunAsync();
+await app.RunAsync();
