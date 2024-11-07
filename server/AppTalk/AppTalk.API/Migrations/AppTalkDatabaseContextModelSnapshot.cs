@@ -51,7 +51,7 @@ namespace AppTalk.API.Migrations
 
                     b.Property<Guid>("RoomId")
                         .HasColumnType("uuid")
-                        .HasColumnName("room_id");
+                        .HasColumnName("roomId");
 
                     b.Property<DateTimeOffset>("Updated")
                         .ValueGeneratedOnAdd()
@@ -61,7 +61,7 @@ namespace AppTalk.API.Migrations
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid")
-                        .HasColumnName("user_id");
+                        .HasColumnName("userId");
 
                     b.HasKey("Id");
 
@@ -97,7 +97,7 @@ namespace AppTalk.API.Migrations
 
                     b.Property<Guid>("ServerId")
                         .HasColumnType("uuid")
-                        .HasColumnName("server_id");
+                        .HasColumnName("serverId");
 
                     b.Property<DateTimeOffset>("Updated")
                         .ValueGeneratedOnAdd()
@@ -149,7 +149,7 @@ namespace AppTalk.API.Migrations
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid")
-                        .HasColumnName("user_id");
+                        .HasColumnName("userId");
 
                     b.HasKey("Id");
 
@@ -177,11 +177,11 @@ namespace AppTalk.API.Migrations
 
                     b.Property<Guid>("ServerId")
                         .HasColumnType("uuid")
-                        .HasColumnName("server_id");
+                        .HasColumnName("serverId");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid")
-                        .HasColumnName("user_id");
+                        .HasColumnName("userId");
 
                     b.HasKey("Id");
 
@@ -193,7 +193,7 @@ namespace AppTalk.API.Migrations
                     b.HasIndex("UserId", "ServerId")
                         .IsUnique();
 
-                    b.ToTable("server_members", "app_talk");
+                    b.ToTable("serverMembers", "app_talk");
                 });
 
             modelBuilder.Entity("AppTalk.Models.Models.User", b =>
@@ -225,7 +225,7 @@ namespace AppTalk.API.Migrations
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("password_hash");
+                        .HasColumnName("passwordHash");
 
                     b.Property<DateTimeOffset>("Updated")
                         .ValueGeneratedOnAdd()

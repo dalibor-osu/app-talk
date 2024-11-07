@@ -1,5 +1,5 @@
+using AppTalk.Core.Extensions;
 using AppTalk.Models.Models;
-using AppTalk.Utils.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace AppTalk.Models.Database;

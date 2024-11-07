@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using AppTalk.Utils.Interfaces;
+using AppTalk.Core.Interfaces.Model;
 using static AppTalk.Models.Database.Constants;
 
 namespace AppTalk.Models.Models;
 
-[Table(UserTable.TableName)]
+[Table(UsersTable.TableName)]
 public sealed record User : IBasicDatabaseItem
 {
     /// <inheritdoc cref="IIdentifiable.Id"/>
@@ -16,7 +16,7 @@ public sealed record User : IBasicDatabaseItem
     /// <summary>
     /// Username of the user
     /// </summary>
-    [Column(UserTable.Username)]
+    [Column(UsersTable.Username)]
     [Required]
     [MaxLength(32)]
     public string Username { get; set; }
@@ -24,14 +24,14 @@ public sealed record User : IBasicDatabaseItem
     /// <summary>
     /// Hash of the user's password
     /// </summary>
-    [Column(UserTable.PasswordHash)]
+    [Column(UsersTable.PasswordHash)]
     [Required]
     public string PasswordHash { get; set; }
 
     /// <summary>
     /// User's email
     /// </summary>
-    [Column(UserTable.Email)]
+    [Column(UsersTable.Email)]
     [Required]
     [MaxLength(320)]
     public string Email { get; set; }

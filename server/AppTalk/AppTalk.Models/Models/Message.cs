@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using AppTalk.Utils.Interfaces;
+using AppTalk.Core.Interfaces.Model;
 using static AppTalk.Models.Database.Constants;
 
 namespace AppTalk.Models.Models;
 
-[Table(MessageTable.TableName)]
+[Table(MessagesTable.TableName)]
 public sealed record Message : IBasicDatabaseItem, IUserIdentifiable
 {
     /// <inheritdoc cref="IIdentifiable.Id"/>
@@ -23,7 +23,7 @@ public sealed record Message : IBasicDatabaseItem, IUserIdentifiable
     /// <summary>
     /// ID of the parent room
     /// </summary>
-    [Column(MessageTable.RoomId)]
+    [Column(MessagesTable.RoomId)]
     [Required]
     public Guid RoomId { get; set; }
 
@@ -32,7 +32,7 @@ public sealed record Message : IBasicDatabaseItem, IUserIdentifiable
     /// <summary>
     /// Text content of the message
     /// </summary>
-    [Column(MessageTable.Content)]
+    [Column(MessagesTable.Content)]
     [Required]
     [MaxLength(2048)]
     public string Content { get; set; }

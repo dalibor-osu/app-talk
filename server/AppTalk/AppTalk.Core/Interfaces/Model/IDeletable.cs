@@ -1,4 +1,4 @@
-namespace AppTalk.Utils.Interfaces;
+namespace AppTalk.Core.Interfaces.Model;
 
 public interface IDeletable
 {
