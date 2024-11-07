@@ -1,6 +1,10 @@
 using System.Data;
 using System.Text;
 using System.Text.Json.Serialization;
+using AppTalk.API.DatabaseService;
+using AppTalk.API.DatabaseService.Interfaces;
+using AppTalk.API.Managers;
+using AppTalk.Core.Validation;
 using AppTalk.Models.Database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -91,11 +95,13 @@ public static class ServiceConfigurator
 
         builder.Services.AddScoped<IDbConnection>(_ => new NpgsqlConnection(databaseConnectionString));
         builder.Services.AddScoped<Func<IDbConnection>>(_ => () => new NpgsqlConnection(databaseConnectionString));
+
+        builder.Services.AddScoped<IUserDatabaseService, UserDatabaseService>();
     }
 
     private static void ConfigureManagers(this IHostApplicationBuilder builder)
     {
-        // Empty for now
+        builder.Services.AddScoped<UserManager>();
     }
 
     private static void ConfigureHubs(this IHostApplicationBuilder builder)
@@ -105,6 +111,6 @@ public static class ServiceConfigurator
 
     private static void ConfigureLocalServices(this IHostApplicationBuilder builder)
     {
-        // Empty for now
+        builder.Services.AddSingleton<Validator>();
     }
 }

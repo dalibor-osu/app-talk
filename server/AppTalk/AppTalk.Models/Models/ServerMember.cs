@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using AppTalk.Utils.Interfaces;
+using AppTalk.Core.Interfaces.Model;
 using static AppTalk.Models.Database.Constants;
 
 namespace AppTalk.Models.Models;
 
-[Table(ServerMemberTable.TableName)]
+[Table(ServerMembersTable.TableName)]
 public sealed record ServerMember : IIdentifiable, IServerIdentifiable, IUserIdentifiable, ICreated
 {
     /// <inheritdoc cref="IIdentifiable.Id"/>

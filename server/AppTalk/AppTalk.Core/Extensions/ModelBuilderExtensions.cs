@@ -1,7 +1,7 @@
-using AppTalk.Utils.Interfaces;
+using AppTalk.Core.Interfaces.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace AppTalk.Utils.Extensions;
+namespace AppTalk.Core.Extensions;
 
 public static class ModelBuilderExtensions
 {

@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using AppTalk.Utils.Interfaces;
+using AppTalk.Core.Interfaces.Model;
 using static AppTalk.Models.Database.Constants;
 
 namespace AppTalk.Models.Models;
 
-[Table(ServerTable.TableName)]
+[Table(ServersTable.TableName)]
 public sealed record Server : IBasicDatabaseItem, IUserIdentifiable
 {
     /// <inheritdoc cref="IIdentifiable.Id"/>
@@ -23,7 +23,7 @@ public sealed record Server : IBasicDatabaseItem, IUserIdentifiable
     /// <summary>
     /// Name of the server
     /// </summary>
-    [Column(UserTable.Username)]
+    [Column(UsersTable.Username)]
     [Required]
     [MaxLength(32)]
     public string Name { get; set; }

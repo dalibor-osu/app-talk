@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using AppTalk.Utils.Interfaces;
+using AppTalk.Core.Interfaces.Model;
 using static AppTalk.Models.Database.Constants;
 
 namespace AppTalk.Models.Models;
 
-[Table(RoomTable.TableName)]
+[Table(RoomsTable.TableName)]
 public sealed record Room : IBasicDatabaseItem, IServerIdentifiable
 {
     /// <inheritdoc cref="IIdentifiable.Id"/>
