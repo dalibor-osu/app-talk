@@ -2,16 +2,16 @@ using AppTalk.Core.Interfaces.Model;
 
 namespace AppTalk.Core.Validation;
 
-public class Validator
+public static class Validator
 {
-    public ValidationResult Validate(object obj)
+    public static ValidationResult Validate(object obj)
     {
         var result = new ValidationResult();
         if (obj is IUsername username && !IUsername.Validate(username))
         {
             result.Errors.Add(new ValidationError
             {
-                PropertyName = nameof(IUsername.Username),
+                PropertyName = nameof(username.Username),
                 Message = "Invalid username format"
             });
         }
@@ -20,7 +20,7 @@ public class Validator
         {
             result.Errors.Add(new ValidationError
             {
-                PropertyName = nameof(IPasswordCarrier.Password),
+                PropertyName = nameof(passwordCarrier.Password),
                 Message = "Invalid password format"
             });
         }
@@ -29,8 +29,17 @@ public class Validator
         {
             result.Errors.Add(new ValidationError
             {
-                PropertyName = nameof(IEmail.Email),
+                PropertyName = nameof(email.Email),
                 Message = "Invalid email format"
+            });
+        }
+        
+        if (obj is IName name && !IName.Validate(name))
+        {
+            result.Errors.Add(new ValidationError
+            {
+                PropertyName = nameof(name.Name),
+                Message = "Invalid name format"
             });
         }
 

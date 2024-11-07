@@ -34,7 +34,7 @@ public sealed record Message : IBasicDatabaseItem, IUserIdentifiable
     /// </summary>
     [Column(MessagesTable.Content)]
     [Required]
-    [MaxLength(2048)]
+    [MaxLength(MessagesTable.MaxContentLength)]
     public string Content { get; set; }
 
     /// <inheritdoc cref="ICreated.Created"/>
@@ -43,7 +43,7 @@ public sealed record Message : IBasicDatabaseItem, IUserIdentifiable
 
     /// <inheritdoc cref="IUpdated.Updated"/>
     [Column(IUpdated.ColumnName)]
-    public DateTimeOffset Updated { get; set; }
+    public DateTimeOffset? Updated { get; set; }
 
     /// <inheritdoc cref="IDeletable.Deleted"/>
     [Column(IDeletable.ColumnName)]

@@ -13,7 +13,7 @@ public static class ModelBuilderExtensions
             {
                 modelBuilder.Entity(entityType).HasIndex(nameof(IIdentifiable.Id)).IsUnique();
                 modelBuilder.Entity(entityType).Property<Guid>(nameof(IIdentifiable.Id))
-                    .HasDefaultValueSql("uuid_generate_v4()");
+                    .HasDefaultValueSql("gen_random_uuid()");
             }
 
             if (typeof(ICreated).IsAssignableFrom(entityType))
@@ -24,8 +24,8 @@ public static class ModelBuilderExtensions
 
             if (typeof(IUpdated).IsAssignableFrom(entityType))
             {
-                modelBuilder.Entity(entityType).Property<DateTimeOffset>(nameof(IUpdated.Updated))
-                    .HasDefaultValueSql("now()");
+                modelBuilder.Entity(entityType).Property<DateTimeOffset?>(nameof(IUpdated.Updated))
+                    .HasDefaultValueSql(null);
             }
 
             if (typeof(IDeletable).IsAssignableFrom(entityType))

@@ -1,14 +1,16 @@
 namespace AppTalk.Core.Interfaces.Model;
 
-public interface IIdentifiable
+public interface IIdentifiable<TId>
 {
     /// <summary>
     /// ID of the entity
     /// </summary>
-    public Guid Id { get; set; }
+    public TId Id { get; set; }
 
     /// <summary>
     /// Name of the column containing ID in database
     /// </summary>
     public const string ColumnName = "id";
 }
+
+public interface IIdentifiable : IIdentifiable<Guid>;

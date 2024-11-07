@@ -5,7 +5,7 @@ using AppTalk.Models.DataTransferObjects.Login;
 using AppTalk.Models.DataTransferObjects.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Validator = AppTalk.Core.Validation.Validator;
+using ControllerBase = AppTalk.Core.Base.ControllerBase;
 
 namespace AppTalk.API.Controllers;
 
@@ -19,25 +19,11 @@ public class UserController(UserManager userManager) : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [AllowAnonymous]
-    public async Task<ActionResult<LoginResultDto>> Register(
-        [FromServices] Validator validator,
+    public async Task<IActionResult> Register(
         [FromBody] NewUserDto user)
     {
-        var validationResult = validator.Validate(user);
-
-        if (!validationResult.IsValid)
-        {
-            return BadRequest(validationResult);
-        }
-
         var result = await userManager.RegisterAsync(user);
-
-        if (result == null)
-        {
-            return Conflict();
-        }
-
-        return Ok(result);
+        return CreateActionResultResponse(result);
     }
 
     [HttpPost("login")]

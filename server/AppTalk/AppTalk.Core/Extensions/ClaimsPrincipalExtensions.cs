@@ -9,17 +9,17 @@ public static class ClaimsPrincipalExtensions
     
     public static Guid GetUserId(this ClaimsPrincipal claimsPrincipal)
     {
-        string? subject = FindClaim(claimsPrincipal, JwtRegisteredClaimNames.Sub, SubjectClaimTypeSpecificationUrl)?.Value;
+        string subject = FindClaim(claimsPrincipal, JwtRegisteredClaimNames.Sub, SubjectClaimTypeSpecificationUrl)?.Value;
         return Guid.Parse(subject!);
     }
     
     public static Guid TryGetUserId(this ClaimsPrincipal claimsPrincipal)
     {
-        string? subject = FindClaim(claimsPrincipal, JwtRegisteredClaimNames.Sub, SubjectClaimTypeSpecificationUrl)?.Value;
+        string subject = FindClaim(claimsPrincipal, JwtRegisteredClaimNames.Sub, SubjectClaimTypeSpecificationUrl)?.Value;
         return subject == null ? Guid.Empty : Guid.Parse(subject!);
     }
     
-    private static Claim? FindClaim(ClaimsPrincipal principal, params string[] types)
+    private static Claim FindClaim(ClaimsPrincipal principal, params string[] types)
     {
         var identities = principal.Identities.ToArray();
         

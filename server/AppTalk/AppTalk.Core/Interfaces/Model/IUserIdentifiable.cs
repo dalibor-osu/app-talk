@@ -10,5 +10,5 @@ public interface IUserIdentifiable
     /// <summary>
     /// Name of the column containing ID of the parent user in database
     /// </summary>
-    public const string ColumnName = "userId";
+    public const string ColumnName = "user_id";
 }

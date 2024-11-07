@@ -4,6 +4,8 @@ using System.Text;
 using AppTalk.API.DatabaseService.Interfaces;
 using AppTalk.Core.Enums;
 using AppTalk.Core.Helpers;
+using AppTalk.Core.Models;
+using AppTalk.Core.Validation;
 using AppTalk.Models.Convertors;
 using AppTalk.Models.DataTransferObjects.Login;
 using AppTalk.Models.DataTransferObjects.User;
@@ -18,23 +20,29 @@ public class UserManager(
 {
     public async Task<FullUserDto> GetFullAsync(Guid userId)
     {
-        var result = await userDatabaseService.GetUserAsync(userId);
+        var result = await userDatabaseService.GetAsync(userId);
         return result?.ToFullDto();
     }
 
     public async Task<UserDto> GetAsync(Guid userId)
     {
-        var result = await userDatabaseService.GetUserAsync(userId);
+        var result = await userDatabaseService.GetAsync(userId);
         return result?.ToDto();
     }
     
-    public async Task<LoginResultDto> RegisterAsync(NewUserDto user)
+    public async Task<OptionalResponse<LoginResultDto>> RegisterAsync(NewUserDto user)
     {
+        var validationResult = Validator.Validate(user);
+        if (!validationResult.IsValid)
+        {
+            return new OptionalResponse<LoginResultDto>(validationResult);
+        }
+        
         bool exists = await userDatabaseService.UsernameOrEmailExistsAsync(user.Username, user.Email);
 
         if (exists)
         {
-            return null;
+            return new OptionalResponse<LoginResultDto>(OptionalErrorType.AlreadyExists, "Username or email already exists");
         }
         
         var newUser = new User
@@ -44,19 +52,24 @@ public class UserManager(
             PasswordHash = PasswordHelper.GetPasswordHash(user.Password)
         };
         
-        var createdUser = await userDatabaseService.CreateUserAsync(newUser);
+        var createdUser = await userDatabaseService.AddAsync(newUser);
         
-        return new LoginResultDto
+        if (createdUser == null)
+        {
+            return new OptionalResponse<LoginResultDto>(OptionalErrorType.ServiceError, "Unable to create new user");
+        }
+        
+        return new OptionalResponse<LoginResultDto>(new LoginResultDto
         {
             Token = GenerateJwt(createdUser),
             ResultType = LoginResultType.Success,
             User = createdUser.ToFullDto()
-        };
+        });
     }
 
     public async Task<LoginResultDto> LoginAsync(LoginDto loginDto)
     {
-        var user = await userDatabaseService.GetUserAsync(loginDto.Username);
+        var user = await userDatabaseService.GetByUsernameAsync(loginDto.Username);
 
         if (user == null)
         {
@@ -105,6 +118,7 @@ public class UserManager(
         {
             Subject = new ClaimsIdentity(claims),
             Expires = DateTime.Now.AddDays(1),
+            //TODO: FIX THIS!!
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
             Issuer = configuration["Jwt:Issuer"],
             Audience = configuration["Jwt:Issuer"],
