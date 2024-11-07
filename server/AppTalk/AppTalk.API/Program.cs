@@ -19,6 +19,7 @@ using (var scope = app.Services.CreateScope())
         .GetRequiredService<AppTalkDatabaseContext>();
 
     await dbContext.Database.MigrateAsync();
+    
 }
 
 app.UseHttpsRedirection();
