@@ -11,8 +11,6 @@ namespace AppTalk.API.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql(@"CREATE EXTENSION IF NOT EXISTS ""uuid-ossp"";");
-            
             migrationBuilder.EnsureSchema(
                 name: "app_talk");
 
@@ -21,12 +19,12 @@ namespace AppTalk.API.Migrations
                 schema: "app_talk",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "uuid_generate_v4()"),
+                    id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
                     username = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
-                    passwordHash = table.Column<string>(type: "text", nullable: false),
+                    password_hash = table.Column<string>(type: "text", nullable: false),
                     email = table.Column<string>(type: "character varying(320)", maxLength: 320, nullable: false),
                     created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
-                    updated = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
+                    updated = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     deleted = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
@@ -39,19 +37,19 @@ namespace AppTalk.API.Migrations
                 schema: "app_talk",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "uuid_generate_v4()"),
-                    userId = table.Column<Guid>(type: "uuid", nullable: false),
-                    username = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    name = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
                     created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
-                    updated = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
+                    updated = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     deleted = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_servers", x => x.id);
                     table.ForeignKey(
-                        name: "FK_servers_users_userId",
-                        column: x => x.userId,
+                        name: "FK_servers_users_user_id",
+                        column: x => x.user_id,
                         principalSchema: "app_talk",
                         principalTable: "users",
                         principalColumn: "id",
@@ -63,18 +61,19 @@ namespace AppTalk.API.Migrations
                 schema: "app_talk",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "uuid_generate_v4()"),
-                    serverId = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    server_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    name = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
                     created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
-                    updated = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
+                    updated = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     deleted = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_rooms", x => x.id);
                     table.ForeignKey(
-                        name: "FK_rooms_servers_serverId",
-                        column: x => x.serverId,
+                        name: "FK_rooms_servers_server_id",
+                        column: x => x.server_id,
                         principalSchema: "app_talk",
                         principalTable: "servers",
                         principalColumn: "id",
@@ -82,28 +81,28 @@ namespace AppTalk.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "serverMembers",
+                name: "server_members",
                 schema: "app_talk",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "uuid_generate_v4()"),
-                    userId = table.Column<Guid>(type: "uuid", nullable: false),
-                    serverId = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    server_id = table.Column<Guid>(type: "uuid", nullable: false),
                     created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_serverMembers", x => x.id);
+                    table.PrimaryKey("PK_server_members", x => x.id);
                     table.ForeignKey(
-                        name: "FK_serverMembers_servers_serverId",
-                        column: x => x.serverId,
+                        name: "FK_server_members_servers_server_id",
+                        column: x => x.server_id,
                         principalSchema: "app_talk",
                         principalTable: "servers",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_serverMembers_users_userId",
-                        column: x => x.userId,
+                        name: "FK_server_members_users_user_id",
+                        column: x => x.user_id,
                         principalSchema: "app_talk",
                         principalTable: "users",
                         principalColumn: "id",
@@ -115,27 +114,27 @@ namespace AppTalk.API.Migrations
                 schema: "app_talk",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "uuid_generate_v4()"),
-                    userId = table.Column<Guid>(type: "uuid", nullable: false),
-                    roomId = table.Column<Guid>(type: "uuid", nullable: false),
+                    id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    room_id = table.Column<Guid>(type: "uuid", nullable: false),
                     content = table.Column<string>(type: "character varying(2048)", maxLength: 2048, nullable: false),
                     created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
-                    updated = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, defaultValueSql: "now()"),
+                    updated = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     deleted = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_messages", x => x.id);
                     table.ForeignKey(
-                        name: "FK_messages_rooms_roomId",
-                        column: x => x.roomId,
+                        name: "FK_messages_rooms_room_id",
+                        column: x => x.room_id,
                         principalSchema: "app_talk",
                         principalTable: "rooms",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_messages_users_userId",
-                        column: x => x.userId,
+                        name: "FK_messages_users_user_id",
+                        column: x => x.user_id,
                         principalSchema: "app_talk",
                         principalTable: "users",
                         principalColumn: "id",
@@ -150,16 +149,16 @@ namespace AppTalk.API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_messages_roomId",
+                name: "IX_messages_room_id",
                 schema: "app_talk",
                 table: "messages",
-                column: "roomId");
+                column: "room_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_messages_userId",
+                name: "IX_messages_user_id",
                 schema: "app_talk",
                 table: "messages",
-                column: "userId");
+                column: "user_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_rooms_id",
@@ -169,29 +168,29 @@ namespace AppTalk.API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_rooms_serverId",
+                name: "IX_rooms_server_id",
                 schema: "app_talk",
                 table: "rooms",
-                column: "serverId");
+                column: "server_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_serverMembers_id",
+                name: "IX_server_members_id",
                 schema: "app_talk",
-                table: "serverMembers",
+                table: "server_members",
                 column: "id",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_serverMembers_serverId",
+                name: "IX_server_members_server_id",
                 schema: "app_talk",
-                table: "serverMembers",
-                column: "serverId");
+                table: "server_members",
+                column: "server_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_serverMembers_userId_serverId",
+                name: "IX_server_members_user_id_server_id",
                 schema: "app_talk",
-                table: "serverMembers",
-                columns: new[] { "userId", "serverId" },
+                table: "server_members",
+                columns: new[] { "user_id", "server_id" },
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -202,10 +201,10 @@ namespace AppTalk.API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_servers_userId",
+                name: "IX_servers_user_id",
                 schema: "app_talk",
                 table: "servers",
-                column: "userId");
+                column: "user_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_users_email",
@@ -237,7 +236,7 @@ namespace AppTalk.API.Migrations
                 schema: "app_talk");
 
             migrationBuilder.DropTable(
-                name: "serverMembers",
+                name: "server_members",
                 schema: "app_talk");
 
             migrationBuilder.DropTable(

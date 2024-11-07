@@ -8,53 +8,37 @@ using static AppTalk.Models.Database.Constants;
 
 namespace AppTalk.API.DatabaseService;
 
-public class UserDatabaseService(Func<IDbConnection> connectionFactory) : DatabaseServiceBase(connectionFactory), IUserDatabaseService
+public class UserDatabaseService(Func<IDbConnection> connectionFactory) : DatabaseServiceBase<User>(connectionFactory, UsersTable.TableName), IUserDatabaseService
 {
-    public async Task<User> CreateUserAsync(User user)
+    public new async Task<bool> DeleteAsync(Guid id) => await base.DeleteAsync(id);
+    public new async Task<bool> ExistsAsync(Guid id) => await base.ExistsAsync(id);
+    public new async Task<User> GetAsync(Guid id) => await base.GetAsync(id);
+    
+    public async Task<User> AddAsync(User user)
     {
         const string query =
             $"""
                  INSERT INTO app_talk.{UsersTable.TableName} (
-                     {UsersTable.Username},
+                     {IUsername.ColumnName},
                      {UsersTable.PasswordHash},
-                     {UsersTable.Email},
-                     {ICreated.ColumnName},
-                     {IUpdated.ColumnName},
-                     {IDeletable.ColumnName}
+                     {UsersTable.Email}
                  ) VALUES (
                      @username,
                      @passwordHash,
-                     @email,
-                     @created,
-                     @updated,
-                     @deleted
+                     @email
                  ) RETURNING *;
              """;
 
-        user.Created = user.Updated = DateTimeOffset.UtcNow;
-
-        using var connection = ConnectionFactory();
-        return await connection.QuerySingleAsync<User>(query, user);
+        return await base.AddAsync(query, user);
     }
 
-    public async Task<User> GetUserAsync(Guid id)
+    public async Task<User> GetByUsernameAsync(string username)
     {
         const string query =
             $"""
                  SELECT * FROM app_talk.{UsersTable.TableName}
-                     WHERE {IIdentifiable.ColumnName} = @id;
-             """;
-
-        using var connection = ConnectionFactory();
-        return await connection.QuerySingleAsync<User>(query, new { id });
-    }
-
-    public async Task<User> GetUserAsync(string username)
-    {
-        const string query =
-            $"""
-                 SELECT * FROM app_talk.{UsersTable.TableName}
-                     WHERE {UsersTable.Username} = @username;
+                     WHERE {IUsername.ColumnName} = @username
+                        AND {IDeletable.ColumnName} = false;
              """;
 
         using var connection = ConnectionFactory();
@@ -67,7 +51,7 @@ public class UserDatabaseService(Func<IDbConnection> connectionFactory) : Databa
             $"""
                  SELECT EXISTS (
                      SELECT 1 FROM app_talk.{UsersTable.TableName}
-                         WHERE {UsersTable.Username} = @username
+                         WHERE {IUsername.ColumnName} = @username
                              OR "{UsersTable.Email}" = @email
                  );
              """;
@@ -76,46 +60,20 @@ public class UserDatabaseService(Func<IDbConnection> connectionFactory) : Databa
         return await connection.QuerySingleAsync<bool>(query, new { username, email });
     }
 
-    public async Task<User> UpdateAsync(User user)
+    public async Task<bool> UpdateAsync(User user)
     {
         const string query =
             $"""
                  UPDATE app_talk.{UsersTable.TableName}
-                     SET {UsersTable.Username} = @username
+                     SET
+                        {IUsername.ColumnName} = @username,
+                        {IUpdated.ColumnName} = @updated
                      WHERE {IIdentifiable.ColumnName} = @id
+                        AND {IDeletable.ColumnName} = false
                  RETURNING *;
              """;
 
-        user.Updated = DateTimeOffset.UtcNow;
-
-        var connection = ConnectionFactory();
-        return await connection.QuerySingleOrDefaultAsync<User>(query, user);
-    }
-
-    public async Task<bool> DeleteAsync(Guid id)
-    {
-        const string query =
-            $"""
-                 DELETE FROM app_talk.{UsersTable.TableName}
-                     WHERE {IIdentifiable.ColumnName} = @id;
-             """;
-
-        var connection = ConnectionFactory();
-        return await connection.ExecuteAsync(query, new { id }) > 0;
-    }
-
-    public Task<bool> ExistsAsync(Guid id)
-    {
-        const string query =
-            $"""
-                 SELECT EXISTS (
-                     SELECT 1 FROM app_talk.{UsersTable.TableName}
-                         WHERE {IIdentifiable.ColumnName} = @id
-                 );
-             """;
-
-        var connection = ConnectionFactory();
-        return connection.QuerySingleAsync<bool>(query, new { id });
+        return await base.UpdateAsync(query, user);
     }
 
     public async Task<string> GetPasswordHashByUsernameAsync(string username)
@@ -123,7 +81,8 @@ public class UserDatabaseService(Func<IDbConnection> connectionFactory) : Databa
         const string query =
             $"""
                  SELECT {UsersTable.PasswordHash} FROM app_talk.{UsersTable.TableName}
-                     WHERE {UsersTable.Username} = @username;
+                     WHERE {IUsername.ColumnName} = @username
+                        AND {IDeletable.ColumnName} = false;
              """;
 
         var connection = ConnectionFactory();

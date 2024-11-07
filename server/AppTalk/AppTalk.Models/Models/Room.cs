@@ -6,7 +6,7 @@ using static AppTalk.Models.Database.Constants;
 namespace AppTalk.Models.Models;
 
 [Table(RoomsTable.TableName)]
-public sealed record Room : IBasicDatabaseItem, IServerIdentifiable
+public sealed record Room : IBasicDatabaseItem, IServerIdentifiable, IName
 {
     /// <inheritdoc cref="IIdentifiable.Id"/>
     [Column(IIdentifiable.ColumnName)]
@@ -20,13 +20,19 @@ public sealed record Room : IBasicDatabaseItem, IServerIdentifiable
 
     public Server Server { get; set; }
 
+    /// <inheritdoc cref="IName.Name"/>
+    [Column(IName.ColumnName)]
+    [Required]
+    [MaxLength(IName.MaxLength)]
+    public string Name { get; set; } = string.Empty;
+
     /// <inheritdoc cref="ICreated.Created"/>
     [Column(ICreated.ColumnName)]
     public DateTimeOffset Created { get; set; }
 
     /// <inheritdoc cref="IUpdated.Updated"/>
     [Column(IUpdated.ColumnName)]
-    public DateTimeOffset Updated { get; set; }
+    public DateTimeOffset? Updated { get; set; }
 
     /// <inheritdoc cref="IDeletable.Deleted"/>
     [Column(IDeletable.ColumnName)]

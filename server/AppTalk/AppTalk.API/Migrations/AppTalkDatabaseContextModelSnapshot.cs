@@ -29,7 +29,7 @@ namespace AppTalk.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id")
-                        .HasDefaultValueSql("uuid_generate_v4()");
+                        .HasDefaultValueSql("gen_random_uuid()");
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -51,17 +51,15 @@ namespace AppTalk.API.Migrations
 
                     b.Property<Guid>("RoomId")
                         .HasColumnType("uuid")
-                        .HasColumnName("roomId");
+                        .HasColumnName("room_id");
 
-                    b.Property<DateTimeOffset>("Updated")
-                        .ValueGeneratedOnAdd()
+                    b.Property<DateTimeOffset?>("Updated")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated")
-                        .HasDefaultValueSql("now()");
+                        .HasColumnName("updated");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid")
-                        .HasColumnName("userId");
+                        .HasColumnName("user_id");
 
                     b.HasKey("Id");
 
@@ -81,47 +79,7 @@ namespace AppTalk.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id")
-                        .HasDefaultValueSql("uuid_generate_v4()");
-
-                    b.Property<DateTimeOffset>("Created")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created")
-                        .HasDefaultValueSql("now()");
-
-                    b.Property<bool>("Deleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false)
-                        .HasColumnName("deleted");
-
-                    b.Property<Guid>("ServerId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("serverId");
-
-                    b.Property<DateTimeOffset>("Updated")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated")
-                        .HasDefaultValueSql("now()");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
-
-                    b.HasIndex("ServerId");
-
-                    b.ToTable("rooms", "app_talk");
-                });
-
-            modelBuilder.Entity("AppTalk.Models.Models.Server", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id")
-                        .HasDefaultValueSql("uuid_generate_v4()");
+                        .HasDefaultValueSql("gen_random_uuid()");
 
                     b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
@@ -139,17 +97,59 @@ namespace AppTalk.API.Migrations
                         .IsRequired()
                         .HasMaxLength(32)
                         .HasColumnType("character varying(32)")
-                        .HasColumnName("username");
+                        .HasColumnName("name");
 
-                    b.Property<DateTimeOffset>("Updated")
+                    b.Property<Guid>("ServerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("server_id");
+
+                    b.Property<DateTimeOffset?>("Updated")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("ServerId");
+
+                    b.ToTable("rooms", "app_talk");
+                });
+
+            modelBuilder.Entity("AppTalk.Models.Models.Server", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated")
+                        .HasColumnName("created")
                         .HasDefaultValueSql("now()");
+
+                    b.Property<bool>("Deleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("deleted");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)")
+                        .HasColumnName("name");
+
+                    b.Property<DateTimeOffset?>("Updated")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid")
-                        .HasColumnName("userId");
+                        .HasColumnName("user_id");
 
                     b.HasKey("Id");
 
@@ -167,7 +167,7 @@ namespace AppTalk.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id")
-                        .HasDefaultValueSql("uuid_generate_v4()");
+                        .HasDefaultValueSql("gen_random_uuid()");
 
                     b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
@@ -177,11 +177,11 @@ namespace AppTalk.API.Migrations
 
                     b.Property<Guid>("ServerId")
                         .HasColumnType("uuid")
-                        .HasColumnName("serverId");
+                        .HasColumnName("server_id");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid")
-                        .HasColumnName("userId");
+                        .HasColumnName("user_id");
 
                     b.HasKey("Id");
 
@@ -193,7 +193,7 @@ namespace AppTalk.API.Migrations
                     b.HasIndex("UserId", "ServerId")
                         .IsUnique();
 
-                    b.ToTable("serverMembers", "app_talk");
+                    b.ToTable("server_members", "app_talk");
                 });
 
             modelBuilder.Entity("AppTalk.Models.Models.User", b =>
@@ -202,7 +202,7 @@ namespace AppTalk.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id")
-                        .HasDefaultValueSql("uuid_generate_v4()");
+                        .HasDefaultValueSql("gen_random_uuid()");
 
                     b.Property<DateTimeOffset>("Created")
                         .ValueGeneratedOnAdd()
@@ -225,13 +225,11 @@ namespace AppTalk.API.Migrations
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("passwordHash");
+                        .HasColumnName("password_hash");
 
-                    b.Property<DateTimeOffset>("Updated")
-                        .ValueGeneratedOnAdd()
+                    b.Property<DateTimeOffset?>("Updated")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated")
-                        .HasDefaultValueSql("now()");
+                        .HasColumnName("updated");
 
                     b.Property<string>("Username")
                         .IsRequired()
