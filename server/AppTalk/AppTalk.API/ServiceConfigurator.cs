@@ -4,9 +4,11 @@ using System.Text.Json.Serialization;
 using AppTalk.API.DatabaseService;
 using AppTalk.API.DatabaseService.Interfaces;
 using AppTalk.API.Managers;
+using AppTalk.Core.Providers;
 using AppTalk.Core.Validation;
 using AppTalk.Models.Database;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -32,7 +34,7 @@ public static class ServiceConfigurator
 
         builder.Services.AddControllers()
             .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-
+        
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(option =>
         {
@@ -80,6 +82,7 @@ public static class ServiceConfigurator
 
         builder.Services.AddMvc();
         builder.Services.AddSignalR();
+        builder.Services.AddSingleton<IUserIdProvider, SubjectUserIdProvider>();
     }
 
     private static void ConfigureDatabase(this WebApplicationBuilder builder)
@@ -97,11 +100,19 @@ public static class ServiceConfigurator
         builder.Services.AddScoped<Func<IDbConnection>>(_ => () => new NpgsqlConnection(databaseConnectionString));
 
         builder.Services.AddScoped<IUserDatabaseService, UserDatabaseService>();
+        builder.Services.AddScoped<IServerDatabaseService, ServerDatabaseService>();
+        builder.Services.AddScoped<IServerMemberDatabaseService, ServerMemberDatabaseService>();
+        builder.Services.AddScoped<IRoomDatabaseService, RoomDatabaseService>();
+        builder.Services.AddScoped<IMessageDatabaseService, MessageDatabaseService>();
     }
 
     private static void ConfigureManagers(this IHostApplicationBuilder builder)
     {
         builder.Services.AddScoped<UserManager>();
+        builder.Services.AddScoped<ServerManager>();
+        builder.Services.AddScoped<ServerMemberManager>();
+        builder.Services.AddScoped<RoomManager>();
+        builder.Services.AddScoped<MessageManager>();
     }
 
     private static void ConfigureHubs(this IHostApplicationBuilder builder)
@@ -111,6 +122,6 @@ public static class ServiceConfigurator
 
     private static void ConfigureLocalServices(this IHostApplicationBuilder builder)
     {
-        builder.Services.AddSingleton<Validator>();
+        // Empty for now
     }
 }

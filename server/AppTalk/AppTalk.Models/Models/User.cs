@@ -6,19 +6,17 @@ using static AppTalk.Models.Database.Constants;
 namespace AppTalk.Models.Models;
 
 [Table(UsersTable.TableName)]
-public sealed record User : IBasicDatabaseItem
+public sealed record User : IBasicDatabaseItem, IUsername
 {
     /// <inheritdoc cref="IIdentifiable.Id"/>
     [Column(IIdentifiable.ColumnName)]
     [Key]
     public Guid Id { get; set; }
 
-    /// <summary>
-    /// Username of the user
-    /// </summary>
-    [Column(UsersTable.Username)]
+    /// <inheritdoc cref="IUsername.Username"/>
+    [Column(IUsername.ColumnName)]
     [Required]
-    [MaxLength(32)]
+    [MaxLength(IName.MaxLength)]
     public string Username { get; set; }
 
     /// <summary>
@@ -42,7 +40,7 @@ public sealed record User : IBasicDatabaseItem
 
     /// <inheritdoc cref="IUpdated.Updated"/>
     [Column(IUpdated.ColumnName)]
-    public DateTimeOffset Updated { get; set; }
+    public DateTimeOffset? Updated { get; set; }
 
     /// <inheritdoc cref="IDeletable.Deleted"/>
     [Column(IDeletable.ColumnName)]

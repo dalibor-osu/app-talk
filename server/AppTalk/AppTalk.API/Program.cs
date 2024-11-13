@@ -1,4 +1,7 @@
+using System.Net;
 using AppTalk.API;
+using AppTalk.API.Hubs;
+using AppTalk.Core.Extensions;
 using AppTalk.Models.Database;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,6 +27,8 @@ using (var scope = app.Services.CreateScope())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapHub<MessageHub>("/message");
 
 app.MapControllers();
 await app.RunAsync();
