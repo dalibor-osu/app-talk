@@ -95,6 +95,8 @@ public static class ServiceConfigurator
             options.UseNpgsql(databaseConnectionString);
             options.UseNpgsql(x => x.MigrationsAssembly("AppTalk.API"));
         });
+        
+        Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 
         builder.Services.AddScoped<IDbConnection>(_ => new NpgsqlConnection(databaseConnectionString));
         builder.Services.AddScoped<Func<IDbConnection>>(_ => () => new NpgsqlConnection(databaseConnectionString));
