@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppTalk.Models", "AppTalk.M
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppTalk.Core", "AppTalk.Core\AppTalk.Core.csproj", "{5D0BE192-7DE6-455C-84F4-52CCCFA04873}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppTalk.TestClient", "AppTalk.TestClient\AppTalk.TestClient.csproj", "{23D6BCE8-C2C3-425C-BBCE-93C4B068DE86}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,9 +29,5 @@ Global
 		{5D0BE192-7DE6-455C-84F4-52CCCFA04873}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D0BE192-7DE6-455C-84F4-52CCCFA04873}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D0BE192-7DE6-455C-84F4-52CCCFA04873}.Release|Any CPU.Build.0 = Release|Any CPU
-		{23D6BCE8-C2C3-425C-BBCE-93C4B068DE86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{23D6BCE8-C2C3-425C-BBCE-93C4B068DE86}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{23D6BCE8-C2C3-425C-BBCE-93C4B068DE86}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{23D6BCE8-C2C3-425C-BBCE-93C4B068DE86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

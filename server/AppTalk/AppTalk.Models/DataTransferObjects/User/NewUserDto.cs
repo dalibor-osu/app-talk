@@ -1,19 +1,15 @@
+using AppTalk.Core.Interfaces.Model;
+
 namespace AppTalk.Models.DataTransferObjects.User;
 
-public class NewUserDto
+public class NewUserDto : IUsername, IPasswordCarrier, IEmail
 {
-    /// <summary>
-    /// Username of a new user
-    /// </summary>
+    /// <inheritdoc cref="IUsername.Username"/>
     public string Username { get; set; }
     
-    /// <summary>
-    /// Password of a new user
-    /// </summary>
+    /// <inheritdoc cref="IPasswordCarrier.Password"/>
     public string Password { get; set; }
     
-    /// <summary>
-    /// Email of a new user
-    /// </summary>
+    /// <inheritdoc cref="IEmail.Email"/>
     public string Email { get; set; }
 }

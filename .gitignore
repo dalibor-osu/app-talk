@@ -4,3 +4,4 @@ bin/
 target/
 **DotSettings.user
 AppTalk.TestClient
+.client_old
